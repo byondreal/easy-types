@@ -1,13 +1,16 @@
 {
-  "name": "easy-types",
+  "name": "easier-types",
   "description": "Easy type checking",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "scripts": {
     "test": "node test.js"
   },
   "author": {
     "name": "Joel Simon"
   },
+  "contributors": [
+    "Anup Bishnoi <pixelsallover@gmail.com>"
+  ],
   "homepage": "https://github.com/Sloth6/easy-types",
   "bugs": {
     "url": "https://github.com/Sloth6/easy-types/issues"
