@@ -28,7 +28,7 @@ var types = {
 }
 var check = require('./easy-types.js');
 
-check.prototype.addTypes(types);
+check.addTypes(types);
 
 var toCheck = {
   a: 'domo arigato',
