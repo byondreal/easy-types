@@ -2,8 +2,6 @@
   MIT license
 */
 'use strict';
-module.exports.addTypes = addTypes;
-
 var types = {
   posInt: function(i) {
     return ((typeof i === 'number') && (i % 1 === 0) && (i >= 0));
@@ -127,3 +125,5 @@ module.exports = function(obj) {
 module.exports.prototype.addTypes = function(obj) {
   addTypes(obj)
 }
+module.exports.addTypes = addTypes;
+
