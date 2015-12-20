@@ -1,4 +1,5 @@
-var types = { 
+function Something() {}
+var types = {
   myCrazyObject: {
     // Primitive type checking.
     a: 'string',
@@ -13,16 +14,18 @@ var types = {
     i: 'date',
     // Functions
     j: function(e){ return e === 42; },
-    // Arrays 
+    // Arrays
     k: '[int]',
     // User defined types
     l: 'otherObj',
-    // Arrays of user defined types 
+    // Arrays of user defined types
     n: '[otherObj]',
     // Optional types
     o: 'number?',
     // Optional user defined types
-    p: '[otherObj?]'
+    p: '[otherObj?]',
+    // Constructors
+    q: Something
   },
 
   otherObj : {
@@ -48,7 +51,8 @@ var toCheck = {
   k: [1,2,3,4],
   l: {a:1, b: {a:1, b:undefined}},
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
-  p: [undefined, {a:1, b:undefined}]
+  p: [undefined, {a:1, b:undefined}],
+  q: new Something()
 };
 
 try {
