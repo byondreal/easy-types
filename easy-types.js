@@ -92,7 +92,9 @@ function is(obj, req) {
       if (obj === null) throw pretty(obj)+' is not of type '+pretty(req);
       // {} case
       for(var e in req) {
-        if (!obj.hasOwnProperty(e)) throw pretty(obj)+' does not contain field'+e +'for requirement'+req;
+        if (!obj.hasOwnProperty(e)) {
+          throw pretty(obj)+' does not contain field '+e+' for requirement '+req;
+        }
         is(obj[e], req[e]);
       }
       
