@@ -71,7 +71,8 @@ function is(obj, req) {
       else if (req.charAt(0) === '[' && req.charAt(req.length-1) === ']') {
         if (req.length === 2) throw 'Empty type array, should be "[type]".';
         var typeName = req.slice(1, -1);
-        var type = userTypes[typeName] || types[typeName];
+        var type = userTypes[typeName] || types[typeName] ||
+          (primitiveTypes.indexOf(typeName) && typeName);
 
         // optional type arrays
         var optTypeName;

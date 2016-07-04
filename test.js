@@ -27,7 +27,9 @@ var types = {
     // Optional user defined types
     p: '[otherObj?]',
     // Constructors
-    q: Something
+    q: Something,
+    // Arrays with primitive types
+    r: '[number]'
   },
 
   otherObj : {
@@ -55,7 +57,8 @@ var toCheck = {
   m: ['abc', undefined, 'def'],
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
   p: [undefined, {a:1, b:undefined}],
-  q: new Something()
+  q: new Something(),
+  r: [0, 12.5, -13]
 };
 
 try {
