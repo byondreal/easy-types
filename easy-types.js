@@ -27,6 +27,8 @@ var types = {
   }
 };
 
+var primitiveTypes = ['boolean', 'number', 'undefined', 'string', 'object'];
+
 function pretty(obj) {
   return JSON.stringify(obj, null, '  ');
 }
@@ -75,7 +77,9 @@ function is(obj, req) {
         var optTypeName;
         if (!type && typeName.charAt(typeName.length - 1) === '?') {
           optTypeName = typeName.slice(0, -1);
-          type = userTypes[optTypeName] || types[optTypeName];
+          type = userTypes[optTypeName] || types[optTypeName] ||
+            // arrays with optional primitive types
+            (primitiveTypes.indexOf(optTypeName) !== -1 && optTypeName);
         }
         if (!type) throw 'Nonexistent type, '+typeName;
         if (!Array.isArray(obj)) {
@@ -89,7 +93,7 @@ function is(obj, req) {
           is(obj[i], type);
         }
       }
-      // primitive types : [boolean, number, undefined, string, object]
+      // primitive types
       else if (typeof(obj) !== req) {
         throw pretty(obj) + ' should be a(n) '+req;
       }

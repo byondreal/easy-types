@@ -11,9 +11,9 @@
   "contributors": [
     "Anup Bishnoi <pixelsallover@gmail.com>"
   ],
-  "homepage": "https://github.com/Sloth6/easy-types",
+  "homepage": "https://github.com/byondreal/easy-types",
   "bugs": {
-    "url": "https://github.com/Sloth6/easy-types/issues"
+    "url": "https://github.com/byondreal/easy-types/issues"
   },
   "keywords": [
     "type checking",
@@ -21,7 +21,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/Sloth6/easy-types.git"
+    "url": "http://github.com/byondreal/easy-types.git"
   },
   "engines": {
     "node": ">=0.1.90"

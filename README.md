@@ -5,12 +5,11 @@ Easy type checking for node.js.
 ## Installation
   npm install easy-types
 
-
 ## Usage
 
-``` js
-
-var types = { 
+```
+function Something() {}
+var types = {
   myCrazyObject: {
     // Primitive type checking.
     a: 'string',
@@ -24,21 +23,31 @@ var types = {
     h: 'buffer',
     i: 'date',
     // Functions
-    j: function(e){ return e === 42 },
-    // Arrays 
+    j: function(e){ return e === 42; },
+    // Arrays
     k: '[int]',
     // User defined types
     l: 'otherObj',
-    // Arrays of user defined types 
-    n: '[otherObj]'
+    // Arrays with optional type
+    m: '[string?]',
+    // Arrays of user defined types
+    n: '[otherObj]',
+    // Optional types
+    o: 'number?',
+    // Optional user defined types
+    p: '[otherObj?]',
+    // Constructors
+    q: Something
   },
 
   otherObj : {
     a : 'int',
-    b : 'otherObj'
+    b : 'otherObj?'
   },
-}
-var check = require('./easy-types.js')(types);
+};
+var check = require('./easy-types.js');
+
+check.addTypes(types);
 
 var toCheck = {
   a: 'domo arigato',
@@ -52,18 +61,18 @@ var toCheck = {
   i: new Date(),
   j: 42,
   k: [1,2,3,4],
-  l: {a:1, b: {a:1, b:null}},
-  n: [{a:1, b: null}, {a:1, b: null}]
-}
+  l: {a:1, b: {a:1, b:undefined}},
+  m: ['abc', null, 'def'],
+  n: [{a:1, b:undefined}, {a:1, b:undefined}],
+  p: [undefined, {a:1, b:undefined}],
+  q: new Something()
+};
 
 try {
-  check(toCheck).is('myCrazyObject')
-  check({a:232, b: '2'}).is({a:'string', b:'string'})
+  check(toCheck).is('myCrazyObject');
   console.log('verified');
   // Your awesome code here.
 } catch (e) {
   console.log(e);
 }
-
-
 ```

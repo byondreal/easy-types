@@ -18,6 +18,8 @@ var types = {
     k: '[int]',
     // User defined types
     l: 'otherObj',
+    // Arrays with optional type
+    m: '[string?]',
     // Arrays of user defined types
     n: '[otherObj]',
     // Optional types
@@ -50,6 +52,7 @@ var toCheck = {
   j: 42,
   k: [1,2,3,4],
   l: {a:1, b: {a:1, b:undefined}},
+  m: ['abc', undefined, 'def'],
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
   p: [undefined, {a:1, b:undefined}],
   q: new Something()
