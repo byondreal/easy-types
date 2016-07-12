@@ -30,12 +30,16 @@ var types = {
 var primitiveTypes = ['boolean', 'number', 'undefined', 'string', 'object'];
 
 function pretty(obj) {
-  return JSON.stringify(obj, null, '  ');
+  return JSON.stringify(obj, null, 2);
 }
 
 var userTypes = {};
 function addTypes(obj) {
-  userTypes = obj;
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      userTypes[key] = obj[key];
+    }
+  }
   return module.exports;
 }
 
@@ -44,7 +48,7 @@ function is(obj, req) {
     // Check for constructor, or arbitrary function to apply to obj
     case 'function':
       if (obj instanceof req) { return; }
-      if (!req(obj)) throw (pretty(obj) + ' failed ' + req);
+      if (!req(obj)) throw pretty(obj) + ' failed ' + req;
       break;
 
     case 'string':
@@ -122,12 +126,13 @@ function is(obj, req) {
 
 module.exports = function(obj) {
   return {
-    is: function(req){
+    is: function(req, err) {
       try {
         is(obj, req);
       } catch(e) {
-        console.trace();
-        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\nBecause ' + e;
+        if (err) { throw err; }
+        console.error(e);
+        throw new Error(pretty(obj) + ' fails to meet ' + pretty(req));
       }
       return true;
     }
