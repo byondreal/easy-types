@@ -30,7 +30,13 @@ var types = {
 var primitiveTypes = ['boolean', 'number', 'undefined', 'string', 'object'];
 
 function pretty(obj) {
-  return JSON.stringify(obj, null, 2);
+  var serialized;
+  try {
+    serialized = JSON.stringify(obj, null, 2);
+  } catch(e) {
+    serialized = 'object';
+  }
+  return serialized;
 }
 
 var userTypes = {};
