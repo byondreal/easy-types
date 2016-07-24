@@ -116,7 +116,7 @@ function is(obj, req) {
       // {} case
       for (var e in req) {
         if (!req.hasOwnProperty(e)) { continue; }
-        if (!obj.hasOwnProperty(e) &&
+        if (!obj.hasOwnProperty(e) && req[e].charAt &&
             req[e].charAt(req[e].length - 1) !== '?') {
           throw pretty(obj)+' does not contain field '+e+
             ' for requirement '+pretty(req);
