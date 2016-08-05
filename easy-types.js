@@ -40,15 +40,6 @@ function pretty(obj) {
 }
 
 var userTypes = {};
-function addTypes(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      userTypes[key] = obj[key];
-    }
-  }
-  return module.exports;
-}
-
 function is(obj, req) {
   switch (typeof req) {
     // Check for constructor, or arbitrary function to apply to obj
@@ -130,7 +121,7 @@ function is(obj, req) {
     }
 }
 
-module.exports = function(obj) {
+function check(obj) {
   return {
     is: function(req, err) {
       try {
@@ -143,10 +134,32 @@ module.exports = function(obj) {
       return true;
     }
   };
-};
+}
 
-module.exports.prototype.addTypes = function(obj) {
-  addTypes(obj);
-};
+function addTypes(obj) {
+  check(obj).is('object');
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      check(obj.key).is('function');
+      check(userTypes[key]).is('undefined',
+          'Overwriting existing types not allowed');
+
+      userTypes[key] = obj[key];
+    }
+  }
+  return check;
+}
+
+function addType(key, checker) {
+  check(key).is('string');
+  check(checker).is('function');
+  check(userTypes[key]).is('undefined',
+      'Overwriting existing types not allowed');
+
+  userTypes[key] = checker;
+  return module.exports;
+}
+
+module.exports = check;
 module.exports.addTypes = addTypes;
-
+module.exports.addType = addType;
