@@ -22,5 +22,6 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/byondreal/easy-types.git"
-  }
+  },
+  "license": "MIT"
 }

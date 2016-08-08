@@ -1,8 +1,3 @@
-/*
-  MIT license
-*/
-'use strict';
-
 var types = {
   posInt: function(i) {
     return ((typeof i === 'number') && (i % 1 === 0) && (i >= 0));
@@ -140,7 +135,7 @@ function addTypes(obj) {
   check(obj).is('object');
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      check(obj.key).is('function');
+      check(obj[key]).is('function');
       check(userTypes[key]).is('undefined',
           'Overwriting existing types not allowed');
 
