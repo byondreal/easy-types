@@ -22,10 +22,5 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/byondreal/easy-types.git"
-  },
-  "engines": {
-    "node": ">=0.1.90"
-  },
-  "main": "easy-types",
-  "readmeFilename": "README.md"
+  }
 }
