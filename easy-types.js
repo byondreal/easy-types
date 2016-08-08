@@ -97,27 +97,27 @@ function is(obj, req) {
       }
       // primitive types
       else if (typeof(obj) !== req) {
-        throw pretty(obj) + ' should be a(n) '+req;
+        throw pretty(obj) + ' should be ' + req;
       }
       break;
 
     case 'object':
-      if (typeof obj !== 'object') throw pretty(obj)+' should be an object';
-      if (obj === null) throw pretty(obj)+' is not of type '+pretty(req);
+      if (typeof obj !== 'object') throw pretty(obj) + ' should be an object';
+      if (obj === null) throw pretty(obj) + ' is not of type ' + pretty(req);
       // {} case
       for (var e in req) {
         if (!req.hasOwnProperty(e)) { continue; }
         if (typeof obj[e] === undefined && req[e].charAt &&
             req[e].charAt(req[e].length - 1) !== '?') {
-          throw pretty(obj)+' does not contain field '+e+
-            ' for requirement '+pretty(req);
+          throw pretty(obj) + ' does not contain field ' + e +
+            ' for requirement ' + pretty(req);
         }
         is(obj[e], req[e]);
       }
 
       break;
       default:
-        throw 'Not a valid requirement: '+pretty(req) +' for '+ pretty(obj);
+        throw 'Not a valid requirement: ' + pretty(req) + ' for ' + pretty(obj);
     }
 }
 
