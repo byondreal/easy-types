@@ -3,7 +3,8 @@
   "description": "Easy type checking",
   "version": "1.2.0",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "deploy": "npm version patch && git push && git push --tags && npm publish"
   },
   "author": {
     "name": "Joel Simon"
