@@ -40,7 +40,13 @@ function is(obj, type) {
     // Check for constructor, or arbitrary function to apply to obj
     case 'function':
       if (obj instanceof type) { return; }
-      if (!type(obj)) throw new Error(pretty(obj) + ' failed ' + type);
+      var result;
+      try {
+        result = type(obj);
+      } catch(e) {
+        throw new Error (pretty(obj) + ' failed ' + type);
+      }
+      if (result === false) throw new Error(pretty(obj) + ' failed ' + type);
       break;
 
     case 'string':
