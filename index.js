@@ -22,7 +22,7 @@ var types = {
   }
 };
 
-var primitiveTypes = ['boolean', 'number', 'undefined', 'string', 'object'];
+var primitives = ['boolean', 'number', 'undefined', 'string', 'object'];
 
 function pretty(obj) {
   var serialized;
@@ -40,7 +40,7 @@ function is(obj, type) {
     // Check for constructor, or arbitrary function to apply to obj
     case 'function':
       if (obj instanceof type) { return; }
-      if (!type(obj)) throw pretty(obj) + ' failed ' + type;
+      if (!type(obj)) throw new Error(pretty(obj) + ' failed ' + type);
       break;
 
     case 'string':
@@ -60,19 +60,21 @@ function is(obj, type) {
       // default types
       else if (types[type]) {
         if (!types[type](obj)) {
-          throw pretty(obj) + ' should be a ' + pretty(type);
+          throw new Error(pretty(obj) + ' should be a ' + pretty(type));
         }
       }
       // arrays : "[type]"
-      else if (type.charAt(0) === '[' && type.charAt(type.length-1) === ']') {
+      else if (type.charAt(0) === '[' &&
+          type.charAt(type.length-1) === ']') {
         var typeName = type.slice(1, -1);
         var checkType = userTypes[typeName] || types[typeName] ||
-          (primitiveTypes.indexOf(typeName) !== -1 && typeName);
+          (primitives.indexOf(typeName) !== -1 && typeName);
 
         // if not a known type and not an optional type, then pass thru
         if (!checkType) { checkType = typeName; }
         if (!Array.isArray(obj)) {
-          throw pretty(obj) + ' should be an array of ' + typeName;
+          throw new Error(pretty(obj) +
+              ' should be an array of ' + typeName);
         }
         if (obj.length === 0) {
           return;
@@ -83,27 +85,32 @@ function is(obj, type) {
       }
       // primitive types
       else if (typeof(obj) !== type) {
-        throw pretty(obj) + ' should be ' + type;
+        throw new Error(pretty(obj) + ' should be ' + type);
       }
       break;
 
     case 'object':
-      if (typeof obj !== 'object') throw pretty(obj) + ' should be an object';
-      if (obj === null) throw pretty(obj) + ' is not of type ' + pretty(type);
+      if (typeof obj !== 'object') {
+        throw new Error(pretty(obj) + ' should be an object');
+      }
+      if (obj === null) {
+        throw new Error(pretty(obj) + ' is not of type ' + pretty(type));
+      }
       // {} case
       for (var e in type) {
         if (!type.hasOwnProperty(e)) { continue; }
         if (typeof obj[e] === undefined && type[e].charAt &&
             type[e].charAt(type[e].length - 1) !== '?') {
-          throw pretty(obj) + ' does not contain field ' + e +
-            ' for requirement ' + pretty(type);
+          throw new Error(pretty(obj) + ' does not contain field ' + e +
+            ' for requirement ' + pretty(type));
         }
         is(obj[e], type[e]);
       }
 
       break;
       default:
-        throw 'Not a valid requirement: ' + pretty(type) + ' for ' + pretty(obj);
+        throw new Error('Not a valid requirement: ' + pretty(type) +
+            ' for ' + pretty(obj));
     }
 }
 
@@ -113,7 +120,7 @@ function check(obj) {
       try {
         is(obj, type);
       } catch(e) {
-        if (err) { throw err; }
+        if (err) { throw new Error(err); }
         console.error(e.stack);
         throw new Error(pretty(obj) + ' fails to meet ' + pretty(type));
       }
