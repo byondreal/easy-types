@@ -41,6 +41,7 @@ var types = {
 
   dummyVals: '[dummyType?]',
   someVal: 'someType',
+  boolArrArr: '[[boolean]]'
 };
 
 // can add multiple types
@@ -74,13 +75,12 @@ var toCheck = {
   r: [0, 12.5, -13],
   otherObj: {a: 1, b: {a: 2, b: {a: 3, b: null}}},
   dummyVals: ['dummy', undefined, 'dummy'],
-  someVal: true
+  someVal: true,
+  boolArrArr: [[true]],
 };
 
-try {
-  check(toCheck).is('myCrazyObject');
-  console.log('verified');
-  // Your awesome code here.
-} catch (e) {
-  console.log(e);
-}
+check(toCheck).is('myCrazyObject');
+check({ prop: [[true], [false]] }).is({ prop: '[[boolean]]' });
+check([[]]).is('[[]]');
+
+console.log('verified');

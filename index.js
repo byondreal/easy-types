@@ -59,26 +59,18 @@ function is(obj, type) {
       }
       // default types
       else if (types[type]) {
-        if (! types[type](obj)) {
+        if (!types[type](obj)) {
           throw pretty(obj) + ' should be a ' + pretty(type);
         }
       }
       // arrays : "[type]"
       else if (type.charAt(0) === '[' && type.charAt(type.length-1) === ']') {
-        if (type.length === 2) throw 'Empty type array, should be "[type]".';
         var typeName = type.slice(1, -1);
         var checkType = userTypes[typeName] || types[typeName] ||
-          (primitiveTypes.indexOf(typeName) && typeName);
+          (primitiveTypes.indexOf(typeName) !== -1 && typeName);
 
-        // optional type arrays
-        var optTypeName;
-        if (!checkType && typeName.charAt(typeName.length - 1) === '?') {
-          optTypeName = typeName.slice(0, -1);
-          checkType = userTypes[optTypeName] || types[optTypeName] ||
-            // arrays with optional primitive types
-            (primitiveTypes.indexOf(optTypeName) !== -1 && optTypeName);
-        }
-        if (!checkType) throw 'Nonexistent type, ' + typeName;
+        // if not a known type and not an optional type, then pass thru
+        if (!checkType) { checkType = typeName; }
         if (!Array.isArray(obj)) {
           throw pretty(obj) + ' should be an array of ' + typeName;
         }
@@ -86,7 +78,6 @@ function is(obj, type) {
           return;
         }
         for (var i = 0; i < obj.length; i++) {
-          if (optTypeName && obj[i] === undefined) continue;
           is(obj[i], checkType);
         }
       }
@@ -123,7 +114,7 @@ function check(obj) {
         is(obj, type);
       } catch(e) {
         if (err) { throw err; }
-        console.error(e);
+        console.error(e.stack);
         throw new Error(pretty(obj) + ' fails to meet ' + pretty(type));
       }
       return true;
@@ -157,3 +148,4 @@ function addType(key, checker) {
 module.exports = check;
 module.exports.addTypes = addTypes;
 module.exports.addType = addType;
+
