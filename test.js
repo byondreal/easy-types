@@ -1,3 +1,5 @@
+var check = require('.');
+
 function Something() {}
 var types = {
   myCrazyObject: {
@@ -36,10 +38,21 @@ var types = {
     a : 'int',
     b : 'otherObj?'
   },
-};
-var check = require('./easy-types.js');
 
+  dummyVal: 'dummyType',
+  someVal: 'someType',
+};
+
+// can add multiple types
 check.addTypes(types);
+check.addType('dummyType', function(val) {
+  return val === 'dummy';
+});
+check.addTypes({
+  someType: function(val) {
+    return val !== undefined;
+  }
+});
 
 var toCheck = {
   a: 'domo arigato',
@@ -58,7 +71,10 @@ var toCheck = {
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
   p: [undefined, {a:1, b:undefined}],
   q: new Something(),
-  r: [0, 12.5, -13]
+  r: [0, 12.5, -13],
+  otherObj: {a: 1, b: {a: 2, b: {a: 3, b: null}}},
+  dummyVal: 'dummy',
+  someVal: true
 };
 
 try {

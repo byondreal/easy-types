@@ -35,96 +35,96 @@ function pretty(obj) {
 }
 
 var userTypes = {};
-function is(obj, req) {
-  switch (typeof req) {
+function is(obj, type) {
+  switch (typeof type) {
     // Check for constructor, or arbitrary function to apply to obj
     case 'function':
-      if (obj instanceof req) { return; }
-      if (!req(obj)) throw pretty(obj) + ' failed ' + req;
+      if (obj instanceof type) { return; }
+      if (!type(obj)) throw pretty(obj) + ' failed ' + type;
       break;
 
     case 'string':
       // optional types
-      var optReq = req.charAt(req.length - 1) === '?' ?
-        req.slice(0, -1) :
+      var optType = type.charAt(type.length - 1) === '?' ?
+        type.slice(0, -1) :
         undefined;
       // success if optional type and undefined value
-      if (optReq) {
+      if (optType) {
         if (obj === undefined) return;
-        req = optReq;
+        type = optType;
       }
       // user defined types
-      if (userTypes[req]) {
-        is(obj, userTypes[req]);
+      if (userTypes[type]) {
+        is(obj, userTypes[type]);
       }
       // default types
-      else if (types[req]) {
-        if (! types[req](obj)) {
-          throw pretty(obj)+' should be a ' + pretty(req);
+      else if (types[type]) {
+        if (! types[type](obj)) {
+          throw pretty(obj) + ' should be a ' + pretty(type);
         }
       }
       // arrays : "[type]"
-      else if (req.charAt(0) === '[' && req.charAt(req.length-1) === ']') {
-        if (req.length === 2) throw 'Empty type array, should be "[type]".';
-        var typeName = req.slice(1, -1);
-        var type = userTypes[typeName] || types[typeName] ||
+      else if (type.charAt(0) === '[' && type.charAt(type.length-1) === ']') {
+        if (type.length === 2) throw 'Empty type array, should be "[type]".';
+        var typeName = type.slice(1, -1);
+        var checkType = userTypes[typeName] || types[typeName] ||
           (primitiveTypes.indexOf(typeName) && typeName);
 
         // optional type arrays
         var optTypeName;
-        if (!type && typeName.charAt(typeName.length - 1) === '?') {
+        if (!checkType && typeName.charAt(typeName.length - 1) === '?') {
           optTypeName = typeName.slice(0, -1);
-          type = userTypes[optTypeName] || types[optTypeName] ||
+          checkType = userTypes[optTypeName] || types[optTypeName] ||
             // arrays with optional primitive types
             (primitiveTypes.indexOf(optTypeName) !== -1 && optTypeName);
         }
-        if (!type) throw 'Nonexistent type, '+typeName;
+        if (!checkType) throw 'Nonexistent type, ' + typeName;
         if (!Array.isArray(obj)) {
-          throw pretty(obj)+' should be an array of '+typeName;
+          throw pretty(obj) + ' should be an array of ' + typeName;
         }
         if (obj.length === 0) {
           return;
         }
         for (var i = 0; i < obj.length; i++) {
           if (optTypeName && obj[i] === undefined) continue;
-          is(obj[i], type);
+          is(obj[i], checkType);
         }
       }
       // primitive types
-      else if (typeof(obj) !== req) {
-        throw pretty(obj) + ' should be ' + req;
+      else if (typeof(obj) !== type) {
+        throw pretty(obj) + ' should be ' + type;
       }
       break;
 
     case 'object':
       if (typeof obj !== 'object') throw pretty(obj) + ' should be an object';
-      if (obj === null) throw pretty(obj) + ' is not of type ' + pretty(req);
+      if (obj === null) throw pretty(obj) + ' is not of type ' + pretty(type);
       // {} case
-      for (var e in req) {
-        if (!req.hasOwnProperty(e)) { continue; }
-        if (typeof obj[e] === undefined && req[e].charAt &&
-            req[e].charAt(req[e].length - 1) !== '?') {
+      for (var e in type) {
+        if (!type.hasOwnProperty(e)) { continue; }
+        if (typeof obj[e] === undefined && type[e].charAt &&
+            type[e].charAt(type[e].length - 1) !== '?') {
           throw pretty(obj) + ' does not contain field ' + e +
-            ' for requirement ' + pretty(req);
+            ' for requirement ' + pretty(type);
         }
-        is(obj[e], req[e]);
+        is(obj[e], type[e]);
       }
 
       break;
       default:
-        throw 'Not a valid requirement: ' + pretty(req) + ' for ' + pretty(obj);
+        throw 'Not a valid requirement: ' + pretty(type) + ' for ' + pretty(obj);
     }
 }
 
 function check(obj) {
   return {
-    is: function(req, err) {
+    is: function(type, err) {
       try {
-        is(obj, req);
+        is(obj, type);
       } catch(e) {
         if (err) { throw err; }
         console.error(e);
-        throw new Error(pretty(obj) + ' fails to meet ' + pretty(req));
+        throw new Error(pretty(obj) + ' fails to meet ' + pretty(type));
       }
       return true;
     }
@@ -135,7 +135,6 @@ function addTypes(obj) {
   check(obj).is('object');
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      check(obj[key]).is('function');
       check(userTypes[key]).is('undefined',
           'Overwriting existing types not allowed');
 
