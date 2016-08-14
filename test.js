@@ -39,7 +39,7 @@ var types = {
     b : 'otherObj?'
   },
 
-  dummyVal: 'dummyType',
+  dummyVals: '[dummyType?]',
   someVal: 'someType',
 };
 
@@ -73,7 +73,7 @@ var toCheck = {
   q: new Something(),
   r: [0, 12.5, -13],
   otherObj: {a: 1, b: {a: 2, b: {a: 3, b: null}}},
-  dummyVal: 'dummy',
+  dummyVals: ['dummy', undefined, 'dummy'],
   someVal: true
 };
 
