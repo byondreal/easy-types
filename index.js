@@ -136,28 +136,25 @@ function check(obj) {
   };
 }
 
-function addTypes(obj) {
-  check(obj).is('object');
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      if (!canOverwriteTypes) {
-        check(userTypes[key]).is('undefined',
-            'Overwriting existing types not allowed: ' + key);
-      }
-      userTypes[key] = obj[key];
-    }
-  }
-  return check;
-}
-
 function addType(key, checker) {
   check(key).is('string');
   check(checker).is('function');
-  check(userTypes[key]).is('undefined',
-      'Overwriting existing types not allowed');
-
+  if (!canOverwriteTypes) {
+    check(userTypes[key]).is('undefined',
+      'Overwriting existing types not allowed: ' + key);
+  }
   userTypes[key] = checker;
-  return module.exports;
+  return check;
+}
+
+function addTypes(obj) {
+  check(obj).is('object');
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && typeof key === 'function') {
+      addType(key, obj[key]);
+    }
+  }
+  return check;
 }
 
 function clearTypes() {
@@ -168,8 +165,8 @@ function allowOverwritingTypes() {
   canOverwriteTypes = true;
 }
 
-check.addTypes = addTypes;
 check.addType = addType;
+check.addTypes = addTypes;
 check.clearTypes = clearTypes;
 check.allowOverwritingTypes = allowOverwritingTypes;
 
