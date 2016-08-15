@@ -158,7 +158,11 @@ function addType(key, checker) {
   return module.exports;
 }
 
+function clearTypes() {
+  userTypes = {};
+}
+
 module.exports = check;
 module.exports.addTypes = addTypes;
 module.exports.addType = addType;
-
+module.exports.clearTypes = clearTypes;
