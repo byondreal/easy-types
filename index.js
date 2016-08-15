@@ -1,3 +1,6 @@
+var primitives = ['boolean', 'number', 'undefined', 'string', 'object'];
+var canOverwriteTypes = false;
+
 var types = {
   posInt: function(i) {
     return ((typeof i === 'number') && (i % 1 === 0) && (i >= 0));
@@ -21,8 +24,6 @@ var types = {
     return Buffer.isBuffer(b);
   }
 };
-
-var primitives = ['boolean', 'number', 'undefined', 'string', 'object'];
 
 function pretty(obj) {
   var serialized;
@@ -139,9 +140,10 @@ function addTypes(obj) {
   check(obj).is('object');
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      check(userTypes[key]).is('undefined',
-          'Overwriting existing types not allowed');
-
+      if (!canOverwriteTypes) {
+        check(userTypes[key]).is('undefined',
+            'Overwriting existing types not allowed: ' + key);
+      }
       userTypes[key] = obj[key];
     }
   }
@@ -162,7 +164,13 @@ function clearTypes() {
   userTypes = {};
 }
 
+function allowOverwritingTypes() {
+  canOverwriteTypes = true;
+}
+
+check.addTypes = addTypes;
+check.addType = addType;
+check.clearTypes = clearTypes;
+check.allowOverwritingTypes = allowOverwritingTypes;
+
 module.exports = check;
-module.exports.addTypes = addTypes;
-module.exports.addType = addType;
-module.exports.clearTypes = clearTypes;
