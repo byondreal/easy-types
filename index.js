@@ -150,7 +150,7 @@ function addType(key, checker) {
 function addTypes(obj) {
   check(obj).is('object');
   for (var key in obj) {
-    if (obj.hasOwnProperty(key) && typeof key === 'function') {
+    if (obj.hasOwnProperty(key) && typeof obj[key] === 'function') {
       addType(key, obj[key]);
     }
   }
