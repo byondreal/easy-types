@@ -5,7 +5,7 @@
   "scripts": {
     "test": "node test.js",
     "prepublish": "npm test",
-    "deploy": "npm test && npm version patch && git push && git push --tags && npm publish"
+    "release": "npm test && npm version patch && git push && git push --tags && npm publish"
   },
   "author": {
     "name": "Joel Simon"
