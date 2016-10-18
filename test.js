@@ -83,4 +83,7 @@ check(toCheck).is('myCrazyObject');
 check({ prop: [[true], [false]] }).is({ prop: '[[boolean]]' });
 check([[]]).is('[[]]');
 
+check(toCheck).isnot('string');
+check({ prop: true }).isnot('array');
+
 console.log('verified');

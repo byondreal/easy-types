@@ -123,22 +123,33 @@ function is(obj, type) {
 
 function check(obj) {
   return {
-    is: function(type, err) {
+    is: function(type, msg) {
       try {
         is(obj, type);
       } catch(e) {
-        if (err) { throw new Error(err); }
         console.error(e.stack);
-        throw new Error(pretty(obj) + ' fails to meet ' + pretty(type));
+        if (msg) { throw new Error(msg); }
+        throw new Error(pretty(obj) + ' is NOT ' + pretty(type));
       }
       return true;
+    },
+    isnot: function(type, msg) {
+      var isIt = true;
+      try {
+        is(obj, type);
+      } catch(e) {
+        isIt = false;
+      }
+      if (isIt) {
+        if (msg) { throw new Error(msg); }
+        throw new Error(pretty(obj) + ' IS ' + pretty(type));
+      }
     }
   };
 }
 
 function addType(key, checker) {
   check(key).is('string');
-  check(checker).is('function');
   if (!canOverwriteTypes) {
     check(userTypes[key]).is('undefined',
       'Overwriting existing types not allowed: ' + key);
@@ -150,7 +161,7 @@ function addType(key, checker) {
 function addTypes(obj) {
   check(obj).is('object');
   for (var key in obj) {
-    if (obj.hasOwnProperty(key) && typeof obj[key] === 'function') {
+    if (obj.hasOwnProperty(key)) {
       addType(key, obj[key]);
     }
   }

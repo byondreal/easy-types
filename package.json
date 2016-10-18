@@ -4,7 +4,8 @@
   "version": "1.3.4",
   "scripts": {
     "test": "node test.js",
-    "deploy": "npm version patch && git push && git push --tags && npm publish"
+    "prepublish": "npm test",
+    "deploy": "npm test && npm version patch && git push && git push --tags && npm publish"
   },
   "author": {
     "name": "Joel Simon"
